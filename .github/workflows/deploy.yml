@@ -1,18 +1,63 @@
-# .github/workflows/deploy.yml
-name: Deploy React Frontend to Render
+# name: Deploy React Frontend to Render
+
+# on:
+#   push:
+#     branches:
+#       - main   # Only deploy when main branch is updated
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: 24
+
+#       - name: Install dependencies
+#         run: npm install
+
+#       - name: Build React app
+#         run: npm run build
+
+#       - name: Build Docker image (production)
+#         run: |
+#           docker build -t react-frontend:latest -f Dockerfile.prod .
+
+#       - name: Login to Render Docker
+#         uses: docker/login-action@v2
+#         with:
+#           username: ${{ secrets.RENDER_DOCKER_USERNAME }}
+#           password: ${{ secrets.RENDER_DOCKER_PASSWORD }}
+
+#       - name: Deploy to Render via API
+#         env:
+#           RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+#           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+#         run: |
+#           curl -X POST "https://api.render.com/deploy/srv-${RENDER_SERVICE_ID}" \
+#           -H "Authorization: Bearer ${RENDER_API_KEY}" \
+#           -H "Content-Type: application/json"
+
+
+
+name: Deploy React App
 
 on:
   push:
     branches:
-      - main  
+      - main
+      - feature  # Watch for feature branch
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
-
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -24,19 +69,43 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build React app
-        run: npm run build
+      - name: Determine branch
+        id: branch
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
 
-      - name: Login to Docker (Render requires Docker build)
+      - name: Build Docker image
+        run: |
+          if [ "$BRANCH_NAME" = "main" ]; then
+            echo "Building Production Docker image..."
+            docker build -t react-frontend:prod -f Dockerfile.prod .
+          else
+            echo "Building Development Docker image..."
+            docker build -t react-frontend:dev -f Dockerfile.dev .
+          fi
+
+      - name: Login to Docker (optional if pushing to Docker Hub)
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.RENDER_DOCKER_USERNAME }}
-          password: ${{ secrets.RENDER_DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Deploy to Render via API
+      - name: Push Docker image to Docker Hub (optional)
+        run: |
+          if [ "$BRANCH_NAME" = "main" ]; then
+            docker tag react-frontend:prod ${{ secrets.DOCKER_USERNAME }}/react-frontend:prod
+            docker push ${{ secrets.DOCKER_USERNAME }}/react-frontend:prod
+          else
+            docker tag react-frontend:dev ${{ secrets.DOCKER_USERNAME }}/react-frontend:dev
+            docker push ${{ secrets.DOCKER_USERNAME }}/react-frontend:dev
+          fi
+
+      - name: Deploy to Render (main only)
+        if: github.ref == 'refs/heads/main'
         env:
           RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
           curl -X POST "https://api.render.com/deploy/srv-${RENDER_SERVICE_ID}" \
-          -H "Authorization: Bearer ${RENDER_API_KEY}"
+          -H "Authorization: Bearer ${RENDER_API_KEY}" \
+          -H "Content-Type: application/json"
+          
