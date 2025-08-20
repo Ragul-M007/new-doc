@@ -1,0 +1,16 @@
+import React from 'react'
+import './App.css'
+const App = () => {
+  return (
+    <div>
+      <h1>Welcome to My React App</h1>
+      <p>This is a simple React application.</p>
+      <p>Feel free to explore and modify the code!</p>
+      <button onClick={() => alert('Button clicked!')}>Click Me</button>
+      <p>Enjoy building your app!</p>
+
+    </div>
+  )
+}
+
+export default App
