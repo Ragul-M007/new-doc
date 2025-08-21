@@ -1,28 +1,39 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import "./App.css";
+import React, { useState } from 'react';
+import './App.css';
 
 const App = () => {
-  return (
-    <Router>
-      <div className="app-container">
-        <nav className="navbar">
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-          <Link to="/contact">Contact</Link>
-        </nav>
+  const [clickCount, setClickCount] = useState(0);
 
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </main>
+  const handleClick = () => {
+    setClickCount(prev => prev + 1);
+    alert(`Button clicked ${clickCount + 1} times!`);
+  };
+
+  return (
+    <div className="app-container">
+      <h1 className="title">Welcome to My React App 🚀</h1>
+      <p className="intro">
+        This is a simple React application designed to help you get started with React development.
+      </p>
+
+      <div className="features">
+        <h2>Features to Explore:</h2>
+        <ul>
+          <li>Interactive button clicks</li>
+          <li>Dynamic content updates</li>
+          <li>React component structure</li>
+        </ul>
       </div>
-    </Router>
+
+      <button className="action-button" onClick={handleClick}>
+        Click Me
+      </button>
+      {clickCount > 0 && <p>You clicked the button {clickCount} times!</p>}
+
+      <footer className="footer">
+        Enjoy building your app and modifying the code!
+      </footer>
+    </div>
   );
 };
 
