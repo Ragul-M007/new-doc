@@ -3,7 +3,7 @@ name: Build and Deploy React Frontend
 on:
   push:
     branches:
-      - main  # Only runs when main branch is updated
+      - master  # Only runs when main branch is updated
 
 jobs:
   build-and-deploy:
