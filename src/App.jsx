@@ -7,7 +7,7 @@ const App = () => {
       <p>This is a simple React application.</p>
 
       {/* <p>hii</p> */}
-      <p>Hii </p>
+      <p>Hiii </p>
       <p>It is designed to help you get started with React development.</p>
       <p>Feel free to explore and modify the code!</p>
       <p>Here are some features you can try:</p>
