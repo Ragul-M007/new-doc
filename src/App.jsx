@@ -1,21 +1,29 @@
-import React from 'react'
-import './App.css'
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import "./App.css";
+
 const App = () => {
   return (
-    <div>
-      <h1>Welcome to My React App</h1>
-      <p>This is a simple React application.</p>
+    <Router>
+      <div className="app-container">
+        <nav className="navbar">
+          <Link to="/">Home</Link>
+          <Link to="/about">About</Link>
+          <Link to="/contact">Contact</Link>
+        </nav>
 
-      {/* <p>hii</p> */}
-      <p>Hiii </p>
-      <p>It is designed to help you get started with React development.</p>
-      <p>Feel free to explore and modify the code!</p>
-      <p>Here are some features you can try:</p>
-      <button onClick={() => alert('Button clicked!')}>Click Me</button>
-      <p>Enjoy building your app!</p>
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
+  );
+};
 
-    </div>
-  )
-}
-
-export default App
+export default App;
