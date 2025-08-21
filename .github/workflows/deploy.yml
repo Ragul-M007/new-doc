@@ -30,7 +30,7 @@ jobs:
 
       # 5️⃣ Build Docker image
       - name: Build Docker image
-        run: docker build -t ragul/react-frontend:latest -f Dockerfile.prod .
+        run: docker build -t ragul/react-frontend:latest -f Dockerfile .
 
       # 6️⃣ Login to Docker Hub
       - name: Login to Docker Hub
