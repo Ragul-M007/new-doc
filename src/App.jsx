@@ -5,6 +5,7 @@ const App = () => {
     <div>
       <h1>Welcome to My React App</h1>
       <p>This is a simple React application.</p>
+      {/* <p>hii</p> */}
       <p>It is designed to help you get started with React development.</p>
       <p>Feel free to explore and modify the code!</p>
       {/* <p>Here are some features you can try:</p> */}
