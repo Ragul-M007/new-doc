@@ -1,7 +1,7 @@
 name: Build and Deploy React Frontend
 
 on:
-  push:
+  pull_request:
     branches:
       - master  # Only runs when main branch is updated
 
@@ -29,8 +29,7 @@ jobs:
         run: npm run build
 
       # 5️⃣ Build Docker image
-      - name: Build Docker image
-        run: docker build -t ragulktr007/react-docker:latest -f Dockerfile .
+
 
       # 6️⃣ Login to Docker Hub
       - name: Login to Docker Hub
@@ -38,6 +37,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+
+
+      - name: Build Docker image
+        run: docker build -t ragulktr007/react-docker:latest -f Dockerfile .
 
       # 7️⃣ Push Docker image to Docker Hub
       - name: Push Docker image
